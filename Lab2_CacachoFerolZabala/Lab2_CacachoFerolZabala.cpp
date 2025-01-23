@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector>
+#include <string>
 using namespace std;
 
 /*
@@ -14,19 +14,19 @@ using namespace std;
 */
 
 int main() {
-    vector<string> strings;
-    string word;
+    int numLines;
+    cin >> numLines;
 
-    while (cin >> word) {
-        strings.push_back(word);
+    for (int currentLine = 1; currentLine <= numLines; currentLine++) {
+        int x, y;
+        string str;
+
+        cin >> x >> y;
+        getline(cin >> ws, str);
+
+        cout << "Agent#" << currentLine << " is at (" <<  x << "," << y << ")" << endl;
+        cout << "Says: " << str << endl;
     }
-
-    printf("Agent#1 is at (%s,%s)\n", strings[1].c_str(), strings[2].c_str());
-    printf("Says: %s %s\n", strings[3].c_str(), strings[4].c_str());
-    printf("Agent#2 is at (%s, %s)\n", strings[5].c_str(), strings[6].c_str());
-    printf("Says: %s\n", strings[7].c_str());
-    printf("Agent#3 is at (%s, %s)\n", strings[8].c_str(), strings[9].c_str());
-    printf("Says: %s %s\n", strings[10].c_str(), strings[11].c_str());
 
     return 0;
 }
