@@ -24,7 +24,7 @@ int main() {
         cin >> x >> y;
         getline(cin >> ws, str);
 
-        cout << "Agent#" << currentLine << " is at (" <<  x << "," << y << ")" << endl;
+        cout << "Agent#" << currentLine << " is at (" <<  x << ", " << y << ")" << endl;
         cout << "Says: " << str << endl;
     }
 
