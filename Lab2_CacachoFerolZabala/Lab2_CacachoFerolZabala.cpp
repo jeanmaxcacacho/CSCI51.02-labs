@@ -2,16 +2,6 @@
 #include <string>
 using namespace std;
 
-/*
-    EXPECTED OUTPUT IS
-
-    Agent#1 is at (19,88)
-    Says: hello there
-    Agent#2 is at (1,2)
-    Says: 3
-    Agent#3 is at (9,9)
-    Says: 9 9
-*/
 
 int main() {
     int numLines;
