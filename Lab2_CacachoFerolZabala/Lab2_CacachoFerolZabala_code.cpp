@@ -19,11 +19,17 @@ int main() {
         cin >> x >> y;
 
         if (cin.fail()) {
-            cout << "Error: Invalid input detected, not both agent coordinates are integers!" << endl;
+            cout << "Error: Invalid input detected, not both coordinates of Agent#" << currentLine << " are integers!" << endl;
+            return 1;
+        }
+
+        if (cin.peek() == '\n' || cin.eof()) {
+            cout << "Error: Invalid input detected, Agent#" << currentLine << " message does not exist!" << endl;
             return 1;
         }
 
         getline(cin >> ws, str);
+
         cout << "Agent#" << currentLine << " is at (" <<  x << ", " << y << ")" << endl;
         cout << "Says: " << str << endl;
     }
