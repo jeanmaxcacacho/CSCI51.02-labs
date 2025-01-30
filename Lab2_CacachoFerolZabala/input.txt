@@ -1,4 +1,5 @@
-3
-19 88 hello there
-1 2 3
+4
+19 88                            hello                 there
+1 3             3
 9 9 9 9
+4 3             
