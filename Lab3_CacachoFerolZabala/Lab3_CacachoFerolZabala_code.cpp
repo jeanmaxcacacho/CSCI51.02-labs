@@ -21,6 +21,10 @@ int main(void) {
     cout << "The stack's current top is '" << intStack.top->data << "'." << endl;
     // expected here is still 3
     cout << "The stack's current top is '" << intStack.peek() << "'." << endl;
+
+    // expected here is 3 4 5 6 in that specific order
+    intStack.listElements();
+
     return 0;
     // 3 4 5 6 will get printed to console because of the destructor
 }

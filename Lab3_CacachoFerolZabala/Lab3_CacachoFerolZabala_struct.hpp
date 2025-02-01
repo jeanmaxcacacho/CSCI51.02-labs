@@ -59,6 +59,15 @@ struct IntStack {
         return top->data;
     }
 
+    void listElements() {
+        IntNode* temp = top;
+        cout << "The elements in the stack are (from top to bottom):" << endl;
+        while (temp) {
+            cout << temp->data << endl;
+            temp = temp->next;
+        }
+    }
+
     ~IntStack() {
         while(!isEmpty()) {
             pop();
