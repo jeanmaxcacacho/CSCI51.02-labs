@@ -19,6 +19,8 @@ in this pointer.
 Another property our implementation has is that being based off a linked
 list, the size is dynamic. This means that it can grow or shrink as needed,
 the only limitation to its size is the amount of memory available to
-the program.
+the program. Calling the pop() function also releases the assigned memory
+to the node to prevent memory leaks. The stack's destructor calls pop on all
+nodes in the stack once the struct becomes out of scope.
 
 For the sake of simplicity the IntStack struct is instantiated to be empty.
