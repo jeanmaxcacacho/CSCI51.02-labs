@@ -18,3 +18,8 @@
 *.snm
 *.vrb
 *.xdv
+
+# Ignore files produced by minted
+_minted*
+*.pyg
+*.pytxcode
