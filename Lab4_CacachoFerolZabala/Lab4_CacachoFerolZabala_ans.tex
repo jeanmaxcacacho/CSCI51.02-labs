@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{hyperref}
 \usepackage[a4paper, margin=1.05in]{geometry}
 \usepackage{minted}
 
@@ -27,28 +28,53 @@
 
 {\huge \textbf{Reference AT\&T ASM code\:}}
 \begin{minted}{gas}
-    _Z5dummyi:
-    .LFB0:
-	    .cfi_startproc
-	    endbr64
-	    pushq	%rbp
-	    .cfi_def_cfa_offset 16
-	    .cfi_offset 6, -16
-	    movq	%rsp, %rbp
-	    .cfi_def_cfa_register 6
-	    movl	%edi, -20(%rbp)
-	    movl	-20(%rbp), %edx
-	    movl	%edx, %eax
-	    sall	$3, %eax
-	    addl	%edx, %eax
-	    addl	%eax, %eax
-	    addl	%edx, %eax
-	    movl	%eax, -4(%rbp)
-	    movl	-4(%rbp), %eax
-	    popq	%rbp
-	    .cfi_def_cfa 7, 8
-	    ret
-	    .cfi_endproc
+	.file	"cppAssembly3.cpp"
+	.text
+	.globl	_Z5dummyi
+	.type	_Z5dummyi, @function
+_Z5dummyi:
+.LFB0:
+	.cfi_startproc
+	endbr64
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -20(%rbp)
+	movl	-20(%rbp), %edx
+	movl	%edx, %eax
+	sall	$3, %eax
+	addl	%edx, %eax
+	addl	%eax, %eax
+	addl	%edx, %eax
+	movl	%eax, -4(%rbp)
+	movl	-4(%rbp), %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	_Z5dummyi, .-_Z5dummyi
+	.ident	"GCC: (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0"
+	.section	.note.GNU-stack,"",@progbits
+	.section	.note.gnu.property,"a"
+	.align 8
+	.long	1f - 0f
+	.long	4f - 1f
+	.long	5
+0:
+	.string	"GNU"
+1:
+	.align 8
+	.long	0xc0000002
+	.long	3f - 2f
+2:
+	.long	0x3
+3:
+	.align 8
+4:
+
 \end{minted}
 
 \vfill
@@ -87,9 +113,89 @@
     19x = (x << 4) + (x << 1) + x
     \]
 
-    \item \textbf{(Paco) What does the assembly version do? Does it use the multiply instruction?}
+    \item \textbf{(Max) What does the assembly version do? Does it use the multiply instruction?}
     
-    your mom is a placeholder
+    We start by getting the assembly instructions that correspond the \emph{logic} of the dummy function.
+    When a C++ source file is compiled to assembly with the g++ compiler, the assembly instructions that
+    correspond to the function body is located inside the block labeled with the function's \emph{mangled name}.
+
+    Since the function's name is \texttt{dummy}, a 5 letter string, and it takes in 1 integer parameter, instructions pertaining
+    to the logic of the function body can be found inside the block labeled \texttt{\_Z5dummyi}. For the specifics of the
+    GAS name mangling syntax we consulted \href{http://web.mit.edu/tibbetts/Public/inside-c/www/mangling.html}{this resource}.
+
+    \begin{minted}{gas}
+    _Z5dummyi:
+    .LFB0:
+        .cfi_startproc
+        endbr64
+        pushq	%rbp
+        .cfi_def_cfa_offset 16
+        .cfi_offset 6, -16
+        movq	%rsp, %rbp
+        .cfi_def_cfa_register 6
+        movl	%edi, -20(%rbp)
+        movl	-20(%rbp), %edx
+        movl	%edx, %eax
+        sall	$3, %eax
+        addl	%edx, %eax
+        addl	%eax, %eax
+        addl	%edx, %eax
+        movl	%eax, -4(%rbp)
+        movl	-4(%rbp), %eax
+        popq	%rbp
+        .cfi_def_cfa 7, 8
+        ret
+        .cfi_endproc
+    \end{minted}
+
+    Ignoring the instructions allotted for the \href{https://en.wikipedia.org/wiki/Function_prologue_and_epilogue}{function prologue and epilogue}
+    and for stack management, the arithmetic logic of the \texttt{dummy} function is contained within the lines:
+
+    \begin{minted}{gas}
+        movl	%edx, %eax
+        sall	$3, %eax
+        addl	%edx, %eax
+        addl	%eax, %eax
+        addl	%edx, %eax
+        movl	%eax, -4(%rbp)
+        popq	%rbp
+    \end{minted}
+
+    The value inside the \texttt{\%edx} register (the function parameter) is copied into the register \texttt{\%eax},
+    where it is then shifted 3 bits to the left and stored back in the same register. \texttt{\%eax} is then incremented
+    by the value inside \texttt{\%edx} which remains unchanged. Let \(x\) denote the function parameter \(x\), the value
+    inside the register \texttt{\%eax} can be obtained by performing the following operations.
+
+    \[
+    \texttt{\%eax} = 0 + \texttt{\%edx} = x
+    \]
+    \[
+    \texttt{\%eax} = x << 3 = 8x
+    \]
+    \[
+    \texttt{\%eax} = 8x + \texttt{\%edx} = 8x + x = 9x
+    \]
+
+    At the fourth line \texttt{\%eax} is added onto itself and stored back inside \texttt{\%eax}, after which it is again
+    incremented by the the value inside \texttt{\%edx} which is still just \(x\). The value inside the \texttt{\%eax} register
+    is now \(19x\), the desired product.
+
+    \[
+    \texttt{\%eax} = \texttt{\%eax} + \texttt{\%eax} = 9x + 9x = 18x
+    \]
+    \[
+    \texttt{\%eax} = 18x + \texttt{\%edx} = 18x + x = 19x
+    \]
+
+    The final lines:
+
+    \begin{minted}{gas}
+        movl	%eax, -4(%rbp)
+        popq	%rbp
+    \end{minted}
+
+    \ldots copies the value stored inside \texttt{\%eax} into the base pointer to which it is then popped back to the main stack---effectively
+    "returning" the value of the function.
 
     \item \textbf{(Paco) What happens for the case of \( x \cdot 45 \)?}
     
@@ -99,7 +205,7 @@
     
     your mom is a placeholder
 
-    \item \textbf{(Max) What happens for the case of \( x \cdot  0 \)?}
+    \item \textbf{(XXX) What happens for the case of \( x \cdot  0 \)?}
     
     your mom is a placeholder
 \end{enumerate}
