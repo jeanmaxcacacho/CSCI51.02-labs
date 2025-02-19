@@ -2,3 +2,19 @@
 *.out
 
 .vscode
+
+# LaTeX auxiliary and output files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fls
+*.log
+*.out
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.xdv
