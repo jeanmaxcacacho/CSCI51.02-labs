@@ -75,10 +75,14 @@
     19x = 2^4x + (2+1)x
     \]
     \[
+    19x = 2^4x + 2^1x + 2^0x
+    \]
+    The expression \(2^0\) is just \(1\) and \(x\) multiplied by \(1\) is just \(x\), so we end up with the following:
+    \[
     19x = 2^4x + 2^1x + x
     \]
-    Now that we're able to represent the product as a sum of powers of 2, we can then substitute the powers of 2 to
-    their corresponding bit shifts.
+    Now that we're able to represent the product as a sum of powers of 2, we can then substitute the individual products
+    to their corresponding bit shifts.
     \[
     19x = (x << 4) + (x << 1) + x
     \]
