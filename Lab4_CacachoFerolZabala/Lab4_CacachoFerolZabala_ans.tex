@@ -1,0 +1,56 @@
+\documentclass{article}
+
+\usepackage[a4paper, margin=1.5in]{geometry}
+
+\begin{document}
+\centering
+{\huge Intro to Assembly I: GAS \& AT\&T Syntax}
+\vspace{0.5cm}
+
+\begin{enumerate}
+    \item \textbf{(Max) Given an integer \( x \), can \( x \) multiply by 19 be implemented by using shifts and adds only? How?}
+    
+    First we define "\( x \) multiply by 19" as the equation:
+    \[
+    x \cdot 19 = 19x
+    \]
+    Notice that 19 can be broken into a sum of 16 and 3 which allows us to rewrite the above to:
+    \[
+    19x = (16+3)x 
+    \]
+    \[
+    19x = 16x + 3x
+    \]
+    Bit shifting manipulates numbers through powers of 2, we want to break down the expression such that we
+    can express it as the sum of powers of 2. By inspection we can see that 16 is a power of 2. Using the same
+    technique above we can also break down 3.
+    \[
+    19x = 2^4x + (2+1)x
+    \]
+    \[
+    19x = 2^4x + 2^1x + x
+    \]
+    Now that we're able to represent the product as a sum of powers of 2, we can then substitute the powers of 2 to
+    their corresponding bit shifts.
+    \[
+    19x = (x << 4) + (x << 1) + x
+    \]
+
+    \item \textbf{(Paco) What does the assembly version do? Does it use the multiply instruction?}
+    
+    your mom is a placeholder
+
+    \item \textbf{(Paco) What happens for the case of \( x \cdot 45 \)?}
+    
+    your mom is a placeholder
+
+    \item \textbf{(Ian) What happens for the case of \( x \cdot -2 \)?}
+    
+    your mom is a placeholder
+
+    \item \textbf{(Max) What happens for the case of \( x \cdot  0 \)?}
+    
+    your mom is a placeholder
+\end{enumerate}
+
+\end{document}
