@@ -1,4 +1,5 @@
 cppAssembly3.cpp
+cppAssembly3.s
 
 *.exe
 *.out

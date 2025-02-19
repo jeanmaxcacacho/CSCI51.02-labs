@@ -200,15 +200,79 @@ _Z5dummyi:
 
     \item \textbf{(Paco) What happens for the case of \( x \cdot 45 \)?}
     
-    your mom is a placeholder
+    Rewriting the C++ code to reflect the new expression \(45 \cdot x\)
+
+    \begin{minted}{cpp}
+        int dummy(int x) {
+            int ret = x * 45;
+            return ret;
+        }
+    \end{minted}
+
+    We recompile to assembly again to produce the following instruction sequence, instructions pertaining to
+    the function prologue, epilogue and stack management were ignored:
+
+    \begin{minted}{gas}
+        movl	%edi, -20(%rbp)
+        movl	-20(%rbp), %eax
+        imull	$45, %eax, %eax
+        movl	%eax, -4(%rbp)
+        movl	-4(%rbp), %eax
+        popq	%rbp
+    \end{minted}
+
+    In the case of \(x\) being multiplied by 45, the compiler does not perform any optimizations and does the
+    multiplication directly through the imull instruction.
 
     \item \textbf{(Ian) What happens for the case of \( x \cdot -2 \)?}
     
-    your mom is a placeholder
+    Rewriting the C++ code to reflect the new expression \(-2 \cdot x\)
 
-    \item \textbf{(XXX) What happens for the case of \( x \cdot  0 \)?}
+    \begin{minted}{cpp}
+        int dummy(int x) {
+            int ret = x * -2;
+            return ret;
+        }
+    \end{minted}
+
+    We recompile to assembly again to produce the following instruction sequence, instructions pertaining to
+    the function prologue, epilogue and stack management were ignored:
+
+    \begin{minted}{gas}
+        movl	%edi, -20(%rbp)
+        movl	-20(%rbp), %edx
+        movl	$0, %eax
+        subl	%edx, %eax
+        addl	%eax, %eax
+        movl	%eax, -4(%rbp)
+        movl	-4(%rbp), %eax
+        popq	%rbp
+    \end{minted}
+
+    \item \textbf{(Ian) What happens for the case of \( x \cdot  0 \)?}
     
-    your mom is a placeholder
+    Rewriting the C++ code to reflect the new expression \(0 \cdot x\)
+
+    \begin{minted}{cpp}
+        int dummy(int x) {
+            int ret = x * 0;
+            return ret;
+        }
+    \end{minted}
+
+    We recompile to assembly again to produce the following instruction sequence, instructions pertaining to
+    the function prologue, epilogue and stack management were ignored:
+
+    \begin{minted}{gas}
+        movl	%edi, -20(%rbp)
+        movl	$0, -4(%rbp)
+        movl	-4(%rbp), %eax
+        popq	%rbp
+    \end{minted}
+
+    In the case of \(x\) being multiplied by 0, the compiler automatically detects that one of the factors of the
+    product is a 0. Thus the return value is automatically a 0.
+
 \end{enumerate}
 
 \end{document}
