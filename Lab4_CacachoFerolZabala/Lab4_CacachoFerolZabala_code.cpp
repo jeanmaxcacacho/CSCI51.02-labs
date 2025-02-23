@@ -28,9 +28,8 @@ int russianPeasant(int x, int y) {
     int product = 0;
 
     while (y > 0) {
-        if (y & 1) {
-            product += x;
-        }
+        if (y & 1) product += x;
+        
         x <<= 1;
         y >>= 1;
     }
