@@ -22,8 +22,8 @@ int russianPeasant(int x, int y) {
 
     bool isNegative = (x < 0) ^ (y < 0);
 
-    if (x < 0) x = -x;
-    if (y < 0) y = -y;
+    x = abs(x);
+    y = abs(y);
 
     int product = 0;
 
