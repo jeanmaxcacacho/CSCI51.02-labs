@@ -1,6 +1,6 @@
-Our `*_code.cpp` file implements a modified version of the russian peasant algorithm through an iterative approach. The motivation
+Our C++ program implements a modified version of the russian peasant algorithm through an iterative approach. The motivation
 behind the implementation of this specific algorithm lies in the hint provided in the lab specs about simulating the approach in
-implemeneting "x multiplied by 19" only through addition and bit shifting where we found a recursive problem of breaking down the coefficient
+"x multiplied by 19" only through addition and bit shifting where we found a recursive problem of breaking down the coefficient
 into the largest perfect powers of 2.
 
 In the case of the example 19x:
@@ -49,6 +49,8 @@ step 6:
 y == 0; loop terminates
 return product 19x
 
-Sign checking occurs at the start through a XOR check (a < 0) ^ (b < 0). Since |ab| == |-1 * ab|, we only need to apply the sign
-at the end of the multiplication. The runtime of this algorithm is logarithmic, in each iteration y is halved taking at most ⌈log(y)⌉ + 1
-iterations to reach 0, all other operations are O(1).
+Sign checking occurs at the start through a XOR check `bool isNegative = (a < 0) ^ (b < 0)`, this will only return true if a or b is negative but not both.
+At the end the sign is applied depending on the truth value of isNegative. This works since |ab| = |-1 * ab|, we only need to apply the sign at the end of
+the multiplication. Since sign application is applied based on the XOR check at the end along with the equality earlier stated, both function parameters are
+passed into the abs() function after the XOR check. The runtime of this algorithm is logarithmic, in each iteration y is halved taking at most ⌈log(y)⌉ iterations
+to reach 0, all other operations are assumed to have constant time complexity.
