@@ -115,7 +115,7 @@ _Z5dummyi:
 
     \item \textbf{(Max) What does the assembly version do? Does it use the multiply instruction?}
     
-    We start by getting the assembly instructions that correspond the \emph{logic} of the dummy function.
+    We start by getting the assembly instructions that correspond with the arithmetic logic of the \texttt{dummy} function.
     When a C++ source file is compiled to assembly with the g++ compiler, the assembly instructions that
     correspond to the function body is located inside the block labeled with the function's \emph{mangled name}.
 
@@ -248,6 +248,11 @@ _Z5dummyi:
         movl	-4(%rbp), %eax
         popq	%rbp
     \end{minted}
+
+    In the case of \(x\) being multiplied by -2, 0 is first loaded into the return register \texttt{\%eax}.
+    \(x\) is then subtracted from from the value stored inside \texttt{\%eax}, of which the difference is added
+    to itself. At this point the value stored inside \texttt{\%eax} already sufficiently reproduces the expression
+    \(-2 \cdot x\). 
 
     \item \textbf{(Ian) What happens for the case of \( x \cdot  0 \)?}
     
