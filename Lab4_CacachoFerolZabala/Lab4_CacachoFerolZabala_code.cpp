@@ -5,14 +5,20 @@ using namespace std;
 int russianPeasant(int x, int y);
 
 int main(void) {
-    cout << "Product of 2 and 3: " << russianPeasant(2, 3) << endl;
-    cout << "Product of 12 and 12: " << russianPeasant(12, 12) << endl;
-    cout << "Product of 9 and 4: " << russianPeasant(9, 4) << endl;
-    cout << "Product of -2 and 5: " << russianPeasant(-2, 5) << endl;
-    cout << "Product of -2 and -14: " << russianPeasant(-2, -14) << endl;
-    cout << "Product of -9 and 100: " << russianPeasant(-9, 100) << endl;
+    // cout << "Product of 2 and 3: " << russianPeasant(2, 3) << endl;
+    // cout << "Product of 12 and 12: " << russianPeasant(12, 12) << endl;
+    // cout << "Product of 9 and 4: " << russianPeasant(9, 4) << endl;
+    // cout << "Product of -2 and 5: " << russianPeasant(-2, 5) << endl;
+    // cout << "Product of -2 and -14: " << russianPeasant(-2, -14) << endl;
+    // cout << "Product of -9 and 100: " << russianPeasant(-9, 100) << endl;
 
-    // expected values are 6, 144, 36, -10, 28, -900
+    int x = 7;
+
+    cout << "Product of 7 and 45: " << russianPeasant(x, 45) << endl;
+    cout << "Product of 7 and -2: " << russianPeasant(x, -2) << endl;
+    cout << "Product of 7 and 0: " << russianPeasant(x, 0) << endl;
+
+    // expected values are 315, -14, and 0
     return 0;
 }
 
