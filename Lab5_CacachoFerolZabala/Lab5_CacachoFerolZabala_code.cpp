@@ -58,7 +58,7 @@ int main(void) {
 
         int N; // redeclare N for each test case
         cin >> N;
-        Point3D testPoints[N]; // allocate to the heap, safe dynamic allocation
+        Point3D testPoints[N];
 
         for (int j=0; j < N; j++) {
             // at this point we're effectively at the "end" of each test case in text file
