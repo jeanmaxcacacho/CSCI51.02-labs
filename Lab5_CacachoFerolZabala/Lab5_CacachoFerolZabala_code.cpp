@@ -65,7 +65,7 @@ int main(void) {
         Point3D* testPoints = new Point3D[N];
 
         for (int j=0; j < N; j++) {
-            // at this point we're effectively at the "end" of each test case in text file
+            // read from each 3D point
             if (!(cin >> testPoints[j].x >> testPoints[j].y >> testPoints[j].z)) {
                 cerr << "Invalid value for one or more of the coordinates! Program terminated!" << endl;
                 delete[] testPoints;
@@ -78,11 +78,6 @@ int main(void) {
         }
 
         delete[] testPoints; 
-    }
-
-    if (!(cin.eof())) {
-        cerr << "Unexpected input detected after final test case!" << endl;
-        return -1;
     }
 
     return 0;
