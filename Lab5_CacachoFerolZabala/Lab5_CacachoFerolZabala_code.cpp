@@ -47,9 +47,8 @@ int manhattanDist(Point3D* p1, Point3D* p2) {
 
 int main(void) {
     int T;
-    cin >> T;
 
-    if (cin.fail() || T <= 0) {
+    if (!(cin >> T) || T <= 0) {
         cerr << "Invalid value for T! Program terminated!" << endl;
         return -1;
     }
@@ -58,18 +57,18 @@ int main(void) {
         if (i > 0) cout << endl;
 
         int N; // redeclare N for each test case
-        cin >> N;
-            if (cin.fail() || N < 2) {
-                cerr << "Invalid value for N! Program terminated!" << endl;
-                return -1;
-            }
-        Point3D testPoints[N];
+        if (!(cin >> N) || N < 2) {
+            cerr << "Invalid value for N! Program terminated!" << endl;
+            return -1;
+        }
+
+        Point3D* testPoints = new Point3D[N];
 
         for (int j=0; j < N; j++) {
             // at this point we're effectively at the "end" of each test case in text file
-            cin >> testPoints[j].x >> testPoints[j].y >> testPoints[j].z;
-            if (cin.fail()) {
+            if (!(cin >> testPoints[j].x >> testPoints[j].y >> testPoints[j].z)) {
                 cerr << "Invalid value for one or more of the coordinates! Program terminated!" << endl;
+                delete[] testPoints;
                 return -1;
             }
         }
@@ -77,6 +76,14 @@ int main(void) {
         for (int k=0; k < N-1; k++) {
             cout << manhattanDist(&testPoints[k], &testPoints[k+1]) << endl;
         }
+
+        delete[] testPoints; 
     }
+
+    if (!(cin.eof())) {
+        cerr << "Unexpected input detected after final test case!" << endl;
+        return -1;
+    }
+
     return 0;
 }
