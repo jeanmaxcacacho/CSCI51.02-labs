@@ -56,6 +56,12 @@ _Z13manhattanDistP7Point3DS0_:
 	.align 8
 .LC0:
 	.string	"Invalid value for T! Program terminated!"
+	.align 8
+.LC1:
+	.string	"Invalid value for N! Program terminated!"
+	.align 8
+.LC2:
+	.string	"Invalid value for one or more of the coordinates! Program terminated!"
 	.text
 	.globl	main
 	.type	main, @function
@@ -83,35 +89,76 @@ main:
 	movq	%rax, %rdi
 	call	_ZNKSt9basic_iosIcSt11char_traitsIcEE4failEv@PLT
 	testb	%al, %al
-	je	.L4
+	jne	.L4
+	movl	-60(%rbp), %eax
+	testl	%eax, %eax
+	jg	.L5
+.L4:
+	movl	$1, %eax
+	jmp	.L6
+.L5:
+	movl	$0, %eax
+.L6:
+	testb	%al, %al
+	je	.L7
 	leaq	.LC0(%rip), %rax
 	movq	%rax, %rsi
-	leaq	_ZSt4cout(%rip), %rax
+	leaq	_ZSt4cerr(%rip), %rax
 	movq	%rax, %rdi
 	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
-.L4:
+	movl	$-1, %eax
+	jmp	.L26
+.L7:
 	movl	$0, -52(%rbp)
-	jmp	.L5
-.L14:
+	jmp	.L9
+.L25:
 	movq	%rsp, %rax
 	movq	%rax, %rbx
 	cmpl	$0, -52(%rbp)
-	jle	.L6
+	jle	.L10
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rax
 	movq	%rax, %rsi
 	leaq	_ZSt4cout(%rip), %rax
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
-.L6:
+.L10:
 	leaq	-56(%rbp), %rax
 	movq	%rax, %rsi
 	leaq	_ZSt3cin(%rip), %rax
 	movq	%rax, %rdi
 	call	_ZNSirsERi@PLT
+	leaq	16+_ZSt3cin(%rip), %rax
+	movq	%rax, %rdi
+	call	_ZNKSt9basic_iosIcSt11char_traitsIcEE4failEv@PLT
+	testb	%al, %al
+	jne	.L11
+	movl	-56(%rbp), %eax
+	cmpl	$1, %eax
+	jg	.L12
+.L11:
+	movl	$1, %eax
+	jmp	.L13
+.L12:
+	movl	$0, %eax
+.L13:
+	testb	%al, %al
+	je	.L14
+	leaq	.LC1(%rip), %rax
+	movq	%rax, %rsi
+	leaq	_ZSt4cerr(%rip), %rax
+	movq	%rax, %rdi
+	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
+	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	_ZNSolsEPFRSoS_E@PLT
+	movl	$-1, %eax
+	jmp	.L15
+.L14:
 	movl	-56(%rbp), %ecx
 	movslq	%ecx, %rax
 	subq	$1, %rax
@@ -152,41 +199,41 @@ main:
 	movl	$16, %eax
 	subq	$1, %rax
 	addq	%rdx, %rax
-	movl	$16, %edi
+	movl	$16, %ecx
 	movl	$0, %edx
-	divq	%rdi
+	divq	%rcx
 	imulq	$16, %rax, %rax
 	movq	%rax, %rcx
 	andq	$-4096, %rcx
 	movq	%rsp, %rdx
 	subq	%rcx, %rdx
-.L7:
+.L16:
 	cmpq	%rdx, %rsp
-	je	.L8
+	je	.L17
 	subq	$4096, %rsp
 	orq	$0, 4088(%rsp)
-	jmp	.L7
-.L8:
+	jmp	.L16
+.L17:
 	movq	%rax, %rdx
 	andl	$4095, %edx
 	subq	%rdx, %rsp
 	movq	%rax, %rdx
 	andl	$4095, %edx
 	testq	%rdx, %rdx
-	je	.L9
+	je	.L18
 	andl	$4095, %eax
 	subq	$8, %rax
 	addq	%rsp, %rax
 	orq	$0, (%rax)
-.L9:
+.L18:
 	movq	%rsp, %rax
 	addq	$3, %rax
 	shrq	$2, %rax
 	salq	$2, %rax
 	movq	%rax, -32(%rbp)
 	movl	$0, -48(%rbp)
-	jmp	.L10
-.L11:
+	jmp	.L19
+.L21:
 	movl	-48(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	%rdx, %rax
@@ -225,14 +272,31 @@ main:
 	movq	%rax, %rsi
 	movq	%rcx, %rdi
 	call	_ZNSirsERi@PLT
+	leaq	16+_ZSt3cin(%rip), %rax
+	movq	%rax, %rdi
+	call	_ZNKSt9basic_iosIcSt11char_traitsIcEE4failEv@PLT
+	testb	%al, %al
+	je	.L20
+	leaq	.LC2(%rip), %rax
+	movq	%rax, %rsi
+	leaq	_ZSt4cerr(%rip), %rax
+	movq	%rax, %rdi
+	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
+	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	_ZNSolsEPFRSoS_E@PLT
+	movl	$-1, %eax
+	jmp	.L15
+.L20:
 	addl	$1, -48(%rbp)
-.L10:
+.L19:
 	movl	-56(%rbp), %eax
 	cmpl	%eax, -48(%rbp)
-	jl	.L11
+	jl	.L21
 	movl	$0, -44(%rbp)
-	jmp	.L12
-.L13:
+	jmp	.L22
+.L23:
 	movl	-44(%rbp), %eax
 	addl	$1, %eax
 	movslq	%eax, %rdx
@@ -262,23 +326,29 @@ main:
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
 	addl	$1, -44(%rbp)
-.L12:
+.L22:
 	movl	-56(%rbp), %eax
 	subl	$1, %eax
 	cmpl	%eax, -44(%rbp)
-	jl	.L13
+	jl	.L23
 	movq	%rbx, %rsp
+	jmp	.L28
+.L15:
+	movq	%rbx, %rsp
+	jmp	.L26
+.L28:
 	addl	$1, -52(%rbp)
-.L5:
+.L9:
 	movl	-60(%rbp), %eax
 	cmpl	%eax, -52(%rbp)
-	jl	.L14
+	jl	.L25
 	movl	$0, %eax
+.L26:
 	movq	-24(%rbp), %rdx
 	subq	%fs:40, %rdx
-	je	.L16
+	je	.L27
 	call	__stack_chk_fail@PLT
-.L16:
+.L27:
 	movq	-8(%rbp), %rbx
 	leave
 	.cfi_def_cfa 7, 8

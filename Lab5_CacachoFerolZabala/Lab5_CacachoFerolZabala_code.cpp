@@ -49,8 +49,9 @@ int main(void) {
     int T;
     cin >> T;
 
-    if (cin.fail()) {
-        cout << "Invalid value for T! Program terminated!" << endl;
+    if (cin.fail() || T <= 0) {
+        cerr << "Invalid value for T! Program terminated!" << endl;
+        return -1;
     }
 
     for (int i=0; i < T; i++) {
@@ -58,11 +59,19 @@ int main(void) {
 
         int N; // redeclare N for each test case
         cin >> N;
+            if (cin.fail() || N < 2) {
+                cerr << "Invalid value for N! Program terminated!" << endl;
+                return -1;
+            }
         Point3D testPoints[N];
 
         for (int j=0; j < N; j++) {
             // at this point we're effectively at the "end" of each test case in text file
             cin >> testPoints[j].x >> testPoints[j].y >> testPoints[j].z;
+            if (cin.fail()) {
+                cerr << "Invalid value for one or more of the coordinates! Program terminated!" << endl;
+                return -1;
+            }
         }
 
         for (int k=0; k < N-1; k++) {
