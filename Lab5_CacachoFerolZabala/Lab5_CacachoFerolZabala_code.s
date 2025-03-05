@@ -239,7 +239,7 @@ main:
 	movq	%rax, %rsi
 	leaq	_ZSt4cerr(%rip), %rax
 	movq	%rax, %rdi
-	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT	# cerr << "Invalid value for T...
+	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT	# cerr << "Invalid value for one or more...
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
@@ -327,7 +327,7 @@ main:
 	jmp	.L28
 .L27:
 	movl	$0, %eax
-.L28:
+.L28:							# final return value
 	movq	-8(%rbp), %rdx
 	subq	%fs:40, %rdx
 	je	.L29
