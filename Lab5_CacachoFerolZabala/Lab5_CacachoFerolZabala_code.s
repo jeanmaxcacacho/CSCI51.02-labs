@@ -14,39 +14,39 @@ _Z13manhattanDistP7Point3DS0_:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	movq	%rdi, -8(%rbp)
-	movq	%rsi, -16(%rbp)
-	movq	-8(%rbp), %rax
-	movl	(%rax), %ecx
-	movq	-16(%rbp), %rax
-	movl	(%rax), %edx
-	movl	%ecx, %eax
-	subl	%edx, %eax
-	movl	%eax, %edx
-	negl	%edx
-	cmovns	%edx, %eax
-	movl	%eax, %ecx
-	movq	-8(%rbp), %rax
-	movl	4(%rax), %esi
-	movq	-16(%rbp), %rax
-	movl	4(%rax), %edx
-	movl	%esi, %eax
-	subl	%edx, %eax
-	movl	%eax, %edx
-	negl	%edx
-	cmovns	%edx, %eax
-	leal	(%rcx,%rax), %esi
-	movq	-8(%rbp), %rax
-	movl	8(%rax), %ecx
-	movq	-16(%rbp), %rax
-	movl	8(%rax), %edx
-	movl	%ecx, %eax
-	subl	%edx, %eax
-	movl	%eax, %edx
-	negl	%edx
-	cmovns	%edx, %eax
-	addl	%esi, %eax
-	popq	%rbp
+	movq	%rdi, -8(%rbp)    # p1ptr
+	movq	%rsi, -16(%rbp)   # p2ptr
+	movq	-8(%rbp), %rax    # copy p1ptr to %rax
+	movl	(%rax), %ecx      # copy *p1ptr to %ecx
+	movq	-16(%rbp), %rax   # copy p2ptr to %rax
+	movl	(%rax), %edx      # copy *p2ptr to %edx
+	movl	%ecx, %eax        # copy *p1tr to %eax
+	subl	%edx, %eax        # *p1ptr - *p2ptr store in %eax (x-magnitude of manhattan distance)
+	movl	%eax, %edx        # copy (*p1ptr - *p2ptr) to %edx
+	negl	%edx              # negate, algebraically multiply by negative 1 (recall abs)
+	cmovns	%edx, %eax        # if difference is non-negative, copy to %eax (recall abs)
+	movl	%eax, %ecx        # copy abs(*p1ptr - *p2ptr) to %ecx
+	movq	-8(%rbp), %rax    # copy p1ptr to %rax
+	movl	4(%rax), %esi     # copy to %esi p1ptr->y
+	movq	-16(%rbp), %rax   # copy p2ptr to %rax
+	movl	4(%rax), %edx     # copy to %edx p2ptr->y
+	movl	%esi, %eax        # copy p1ptr->y to %eax
+	subl	%edx, %eax        # (p1ptr->y - p2ptr->y) store in %eax
+	movl	%eax, %edx        # copy (p1ptr->y - p2ptr->y) to %edx
+	negl	%edx              # negate, algebraically multiply by negative 1 (recall abs)
+	cmovns	%edx, %eax        # if difference is non-negative, copy to %eax (recall abs)
+	leal	(%rcx,%rax), %esi # put inside %esi the running sum thus far (x and y-magnitudes of manhattan dist)
+	movq	-8(%rbp), %rax    # copy p1ptr to %rax
+	movl	8(%rax), %ecx     # p1->z inside %ecx
+	movq	-16(%rbp), %rax   # copy p2ptr to %rax
+	movl	8(%rax), %edx     # p2->z inside %edx
+	movl	%ecx, %eax        # copy p1->z to %eax
+	subl	%edx, %eax        # p1->z - p2->z inside %eax
+	movl	%eax, %edx        # copy to %edx the z difference
+	negl	%edx              # negate it (recall abs)
+	cmovns	%edx, %eax        # copy to %eax if the value is non-negative (recall abs)
+	addl	%esi, %eax        # add it all together, remember %esi held the running sum
+	popq	%rbp              # return
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
