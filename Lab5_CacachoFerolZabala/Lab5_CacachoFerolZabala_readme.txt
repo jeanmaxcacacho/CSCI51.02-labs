@@ -4,6 +4,11 @@ errors by terminating execution and not outputting garbage values. It will be wr
 to the console when cin.fail() is true, however the program itself does not have logic
 to "correct" values.
 
+Improperly formatted input will yield invalid values for the coordinates
+because of how values are read from cin, garbage values will be printed onto the stream with output from
+stderror. Streams read from cin after the main for loop will still output the correct manahattan distances
+however will terminate the program with an error.
+
 The variable T is initialized from the top of the plain text file, the next expected value
 is then N. T is used as the main value to "iterate over" as this contains the amount of test
 cases inside a text file. For initializing Point3D struct instances inside the array however

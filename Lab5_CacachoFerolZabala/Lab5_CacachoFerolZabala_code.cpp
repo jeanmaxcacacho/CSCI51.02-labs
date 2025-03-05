@@ -80,5 +80,10 @@ int main(void) {
         delete[] testPoints; 
     }
 
+    if (!(cin.eof())) {
+        cerr << "Unexpected extra input after final test case!" << endl;
+        return -1;
+    } 
+
     return 0;
 }
