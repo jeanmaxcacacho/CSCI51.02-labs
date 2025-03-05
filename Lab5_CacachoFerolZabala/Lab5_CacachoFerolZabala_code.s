@@ -77,15 +77,15 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	subq	$48, %rsp
+	subq	$48, %rsp			# reserving space for local vars
 	movq	%fs:40, %rax
 	movq	%rax, -8(%rbp)
 	xorl	%eax, %eax
 	leaq	-36(%rbp), %rax      # prepare space for T
 	movq	%rax, %rsi
-	leaq	_ZSt3cin(%rip), %rax # get from cin the value for T
+	leaq	_ZSt3cin(%rip), %rax # cin >> T
 	movq	%rax, %rdi
-	call	_ZNSirsERi@PLT
+	call	_ZNSirsERi@PLT		# cin reads to T
 	movq	(%rax), %rdx
 	subq	$24, %rdx
 	movq	(%rdx), %rdx
@@ -93,16 +93,16 @@ main:
 	movq	%rax, %rdi
 	call	_ZNKSt9basic_iosIcSt11char_traitsIcEEntEv@PLT # if cin.fail()
 	testb	%al, %al
-	jne	.L4 # if cin.fail() go to L4
+	jne	.L4 					# if cin.fail() go to L4
 	movl	-36(%rbp), %eax
-	testl	%eax, %eax # T <=0
-	jg	.L5
+	testl	%eax, %eax 			
+	jg	.L5						# if T <=0
 .L4:
-	movl	$1, %eax # return error
+	movl	$1, %eax 			# if invalid T
 	jmp	.L6
 .L5:
 	movl	$0, %eax 
-.L6:
+.L6:							# cerr << "Invalid value for T...
 	testb	%al, %al
 	je	.L7
 	leaq	.LC0(%rip), %rax
@@ -114,12 +114,12 @@ main:
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
-	movl	$-1, %eax # the error value specified in C++ source
-	jmp	.L28 # go to function prologue
-.L7:
-	movl	$0, -28(%rbp)
+	movl	$-1, %eax 			# the error value specified in C++ source
+	jmp	.L28 					# go to function prologue
+.L7:							# initialize i=0
+	movl	$0, -28(%rbp)		
 	jmp	.L9
-.L26: # printing new line between test cases
+.L26: 							# printing new line between test cases
 	cmpl	$0, -28(%rbp)
 	jle	.L10
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rax
@@ -127,10 +127,10 @@ main:
 	leaq	_ZSt4cout(%rip), %rax
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
-.L10: # reading from test cases (or at least getting N)
-	leaq	-32(%rbp), %rax # prepare space for N
+.L10: 							# reading from test cases (or at least getting N)
+	leaq	-32(%rbp), %rax 	# prepare space for N
 	movq	%rax, %rsi
-	leaq	_ZSt3cin(%rip), %rax # get from cin N
+	leaq	_ZSt3cin(%rip), %rax # cin >> N
 	movq	%rax, %rdi
 	call	_ZNSirsERi@PLT # extraction operator
 	movq	(%rax), %rdx
@@ -149,7 +149,7 @@ main:
 	jmp	.L13
 .L12:
 	movl	$0, %eax
-.L13:
+.L13:							# print	error if N < 2
 	testb	%al, %al
 	je	.L14
 	leaq	.LC1(%rip), %rax
@@ -175,30 +175,30 @@ main:
 	salq	$2, %rax
 	movq	%rax, %rdi
 	call	_Znam@PLT
-	movq	%rax, -16(%rbp)
+	movq	%rax, -16(%rbp)		# dynamic allocation for new Point3D[N]
 	movl	$0, -24(%rbp)
 	jmp	.L19
-.L16:
+.L16:							# memory allocation failure
 	movq	-8(%rbp), %rax
 	subq	%fs:40, %rax
 	je	.L18
 	call	__stack_chk_fail@PLT
 .L18:
 	call	__cxa_throw_bad_array_new_length@PLT
-.L22:
-	movl	-24(%rbp), %eax
+.L22:							# read x, y, z
+	movl	-24(%rbp), %eax		# 
 	movslq	%eax, %rdx
 	movq	%rdx, %rax
 	addq	%rax, %rax
 	addq	%rdx, %rax
-	salq	$2, %rax
+	salq	$2, %rax			# shl 2 = multiply by 4 for address of testPoints[j]
 	movq	%rax, %rdx
 	movq	-16(%rbp), %rax
 	addq	%rdx, %rax
 	movq	%rax, %rsi
 	leaq	_ZSt3cin(%rip), %rax
 	movq	%rax, %rdi
-	call	_ZNSirsERi@PLT
+	call	_ZNSirsERi@PLT		# cin >> testPoints[j].x
 	movq	%rax, %rcx
 	movl	-24(%rbp), %eax
 	movslq	%eax, %rdx
@@ -209,7 +209,7 @@ main:
 	movq	%rax, %rdx
 	movq	-16(%rbp), %rax
 	addq	%rdx, %rax
-	addq	$4, %rax
+	addq	$4, %rax			# add 4 bytes for next address (testPoints[j].y)
 	movq	%rax, %rsi
 	movq	%rcx, %rdi
 	call	_ZNSirsERi@PLT
@@ -223,7 +223,7 @@ main:
 	movq	%rax, %rdx
 	movq	-16(%rbp), %rax
 	addq	%rdx, %rax
-	addq	$8, %rax
+	addq	$8, %rax			# add 4 bytes for next address (testPoints[j].z)
 	movq	%rax, %rsi
 	movq	%rcx, %rdi
 	call	_ZNSirsERi@PLT
@@ -234,12 +234,12 @@ main:
 	movq	%rax, %rdi
 	call	_ZNKSt9basic_iosIcSt11char_traitsIcEEntEv@PLT
 	testb	%al, %al
-	je	.L20
+	je	.L20					# jump if invalid input
 	leaq	.LC2(%rip), %rax
 	movq	%rax, %rsi
 	leaq	_ZSt4cerr(%rip), %rax
 	movq	%rax, %rdi
-	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
+	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT	# cerr << "Invalid value for T...
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
@@ -249,18 +249,18 @@ main:
 	movq	-16(%rbp), %rax
 	movq	%rax, %rdi
 	call	_ZdaPv@PLT
-.L21:
+.L21:							
 	movl	$-1, %eax
-	jmp	.L28
-.L20:
-	addl	$1, -24(%rbp)
-.L19:
+	jmp	.L28					# return -1
+.L20:							
+	addl	$1, -24(%rbp)		# j++
+.L19:							# j loop condition
 	movl	-32(%rbp), %eax
 	cmpl	%eax, -24(%rbp)
 	jl	.L22
 	movl	$0, -20(%rbp)
 	jmp	.L23
-.L24:
+.L24:							# manhattanDist(testPoints[k], testPoints[k+1])
 	movl	-20(%rbp), %eax
 	cltq
 	leaq	1(%rax), %rdx
@@ -292,7 +292,7 @@ main:
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT # extraction again
 	addl	$1, -20(%rbp)
-.L23:
+.L23:							# loop condition k < N-1
 	movl	-32(%rbp), %eax
 	subl	$1, %eax
 	cmpl	%eax, -20(%rbp)
@@ -302,12 +302,12 @@ main:
 	movq	-16(%rbp), %rax
 	movq	%rax, %rdi
 	call	_ZdaPv@PLT
-.L25:
+.L25:							# delete[] testPoints;
 	addl	$1, -28(%rbp)
-.L9: # body of the for (int i=0; i < T; i++) {...}
+.L9: 							# body of for (int i=0; i < T; i++) {...}
 	movl	-36(%rbp), %eax
-	cmpl	%eax, -28(%rbp)
-	jl	.L26
+	cmpl	%eax, -28(%rbp)		# loop condition
+	jl	.L26					# jump to loop body if i<T
 	leaq	16+_ZSt3cin(%rip), %rax
 	movq	%rax, %rdi
 	call	_ZNKSt9basic_iosIcSt11char_traitsIcEE3eofEv@PLT
@@ -332,7 +332,7 @@ main:
 	subq	%fs:40, %rdx
 	je	.L29
 	call	__stack_chk_fail@PLT
-.L29:
+.L29:							# exit main
 	leave
 	.cfi_def_cfa 7, 8
 	ret
