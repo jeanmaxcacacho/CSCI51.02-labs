@@ -81,9 +81,9 @@ main:
 	movq	%fs:40, %rax
 	movq	%rax, -8(%rbp)
 	xorl	%eax, %eax
-	leaq	-36(%rbp), %rax
+	leaq	-36(%rbp), %rax      # prepare space for T
 	movq	%rax, %rsi
-	leaq	_ZSt3cin(%rip), %rax
+	leaq	_ZSt3cin(%rip), %rax # get from cin the value for T
 	movq	%rax, %rdi
 	call	_ZNSirsERi@PLT
 	movq	(%rax), %rdx
@@ -91,35 +91,35 @@ main:
 	movq	(%rdx), %rdx
 	addq	%rdx, %rax
 	movq	%rax, %rdi
-	call	_ZNKSt9basic_iosIcSt11char_traitsIcEEntEv@PLT
+	call	_ZNKSt9basic_iosIcSt11char_traitsIcEEntEv@PLT # if cin.fail()
 	testb	%al, %al
-	jne	.L4
+	jne	.L4 # if cin.fail() go to L4
 	movl	-36(%rbp), %eax
-	testl	%eax, %eax
+	testl	%eax, %eax # T <=0
 	jg	.L5
 .L4:
-	movl	$1, %eax
+	movl	$1, %eax # return error
 	jmp	.L6
 .L5:
-	movl	$0, %eax
+	movl	$0, %eax 
 .L6:
 	testb	%al, %al
 	je	.L7
 	leaq	.LC0(%rip), %rax
 	movq	%rax, %rsi
-	leaq	_ZSt4cerr(%rip), %rax
+	leaq	_ZSt4cerr(%rip), %rax # calling cerr
 	movq	%rax, %rdi
 	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
-	movl	$-1, %eax
-	jmp	.L28
+	movl	$-1, %eax # the error value specified in C++ source
+	jmp	.L28 # go to function prologue
 .L7:
 	movl	$0, -28(%rbp)
 	jmp	.L9
-.L26:
+.L26: # printing new line between test cases
 	cmpl	$0, -28(%rbp)
 	jle	.L10
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rax
@@ -127,18 +127,18 @@ main:
 	leaq	_ZSt4cout(%rip), %rax
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
-.L10:
-	leaq	-32(%rbp), %rax
+.L10: # reading from test cases (or at least getting N)
+	leaq	-32(%rbp), %rax # prepare space for N
 	movq	%rax, %rsi
-	leaq	_ZSt3cin(%rip), %rax
+	leaq	_ZSt3cin(%rip), %rax # get from cin N
 	movq	%rax, %rdi
-	call	_ZNSirsERi@PLT
+	call	_ZNSirsERi@PLT # extraction operator
 	movq	(%rax), %rdx
 	subq	$24, %rdx
 	movq	(%rdx), %rdx
 	addq	%rdx, %rax
 	movq	%rax, %rdi
-	call	_ZNKSt9basic_iosIcSt11char_traitsIcEEntEv@PLT
+	call	_ZNKSt9basic_iosIcSt11char_traitsIcEEntEv@PLT # validation check again
 	testb	%al, %al
 	jne	.L11
 	movl	-32(%rbp), %eax
@@ -284,13 +284,13 @@ main:
 	movq	%rax, %rdi
 	call	_Z13manhattanDistP7Point3DS0_
 	movl	%eax, %esi
-	leaq	_ZSt4cout(%rip), %rax
+	leaq	_ZSt4cout(%rip), %rax # store stdout into %rax
 	movq	%rax, %rdi
 	call	_ZNSolsEi@PLT
 	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
-	call	_ZNSolsEPFRSoS_E@PLT
+	call	_ZNSolsEPFRSoS_E@PLT # extraction again
 	addl	$1, -20(%rbp)
 .L23:
 	movl	-32(%rbp), %eax
@@ -304,7 +304,7 @@ main:
 	call	_ZdaPv@PLT
 .L25:
 	addl	$1, -28(%rbp)
-.L9:
+.L9: # body of the for (int i=0; i < T; i++) {...}
 	movl	-36(%rbp), %eax
 	cmpl	%eax, -28(%rbp)
 	jl	.L26
