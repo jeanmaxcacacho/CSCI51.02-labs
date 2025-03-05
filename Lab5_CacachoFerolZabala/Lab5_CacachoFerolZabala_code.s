@@ -62,6 +62,9 @@ _Z13manhattanDistP7Point3DS0_:
 	.align 8
 .LC2:
 	.string	"Invalid value for one or more of the coordinates! Program terminated!"
+	.align 8
+.LC3:
+	.string	"Unexpected extra input after final test case!"
 	.text
 	.globl	main
 	.type	main, @function
@@ -112,7 +115,7 @@ main:
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
 	movl	$-1, %eax
-	jmp	.L27
+	jmp	.L28
 .L7:
 	movl	$0, -28(%rbp)
 	jmp	.L9
@@ -159,7 +162,7 @@ main:
 	movq	%rax, %rdi
 	call	_ZNSolsEPFRSoS_E@PLT
 	movl	$-1, %eax
-	jmp	.L27
+	jmp	.L28
 .L14:
 	movl	-32(%rbp), %eax
 	movslq	%eax, %rdx
@@ -248,7 +251,7 @@ main:
 	call	_ZdaPv@PLT
 .L21:
 	movl	$-1, %eax
-	jmp	.L27
+	jmp	.L28
 .L20:
 	addl	$1, -24(%rbp)
 .L19:
@@ -305,13 +308,31 @@ main:
 	movl	-36(%rbp), %eax
 	cmpl	%eax, -28(%rbp)
 	jl	.L26
-	movl	$0, %eax
+	leaq	16+_ZSt3cin(%rip), %rax
+	movq	%rax, %rdi
+	call	_ZNKSt9basic_iosIcSt11char_traitsIcEE3eofEv@PLT
+	xorl	$1, %eax
+	testb	%al, %al
+	je	.L27
+	leaq	.LC3(%rip), %rax
+	movq	%rax, %rsi
+	leaq	_ZSt4cerr(%rip), %rax
+	movq	%rax, %rdi
+	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
+	movq	_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GOTPCREL(%rip), %rdx
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	call	_ZNSolsEPFRSoS_E@PLT
+	movl	$-1, %eax
+	jmp	.L28
 .L27:
+	movl	$0, %eax
+.L28:
 	movq	-8(%rbp), %rdx
 	subq	%fs:40, %rdx
-	je	.L28
+	je	.L29
 	call	__stack_chk_fail@PLT
-.L28:
+.L29:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
