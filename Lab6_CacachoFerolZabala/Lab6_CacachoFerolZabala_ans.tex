@@ -1,6 +1,9 @@
 \documentclass{article}
 
 \usepackage{minted}
+\usepackage{forest}
+
+\pagenumbering{gobble}
 
 \begin{document}
 
@@ -49,7 +52,79 @@ These code snippets were obtained from the Lab 6 assignment page.
 \begin{enumerate}
     {\large \item What should be the resulting process \emph{FAMILY TREES} from these two (Code A and Code B) code snippets? Illustrate.}
     
-    In reference code A all \texttt{fork()} calls 
+    In reference code A all \texttt{fork()} calls performed at the same "hierarchy level" in the if-else tree. The entry point starts at \texttt{if (fork() == 0)},
+    which produces the first child process. However, should this \texttt{fork()} fail, the succeeding \texttt{fork()} calls in the following \texttt{else if (fork() == 0)}
+    statement produces a child process accordingly. Once a \texttt{fork()} successfully produces a child, the program enters the respective instruction block and stops forking.
+    \textbf{The resulting process family tree from code A looks like:}
+    \vspace{1em}
+
+    \begin{forest}
+        [Parent
+            [Possible Child 1]
+            [Possible Child 2]
+            [Possible Child 3]
+            [Possible Child 4]
+        ]
+    \end{forest}
+
+    \emph{In this diagram, Possible Child $n$ for $n \geq 2$, only gets instantiated if the first $n - 1$ fork(s) fail.}
+
+    In reference code B \texttt{fork()} calls are performed sequentially, with further calls only being called if the previous one succeeds. If the first \texttt{fork()}
+    succeeds, then the second one is called, then if this succeeds the third one is called; so on and so forth. At the first \texttt{fork()} the parent produces a child,
+    in the second one both parent and child produce a child, at the third call the parent, child, and the \emph{grandchild} all produce a child---effectively at each call
+    the amount of total processes \emph{doubles}, demonstrating exponential growth. \textbf{The resulting process family tree from code B, can be illustrated
+    per stage (up to the third fork):}
+    \vspace{2em}
+
+    \begin{center}
+        {\large \textbf{1st Fork}}
+
+        \begin{forest}
+            [Parent
+                [Child 1*]
+            ]
+        \end{forest}
+    \end{center}
+    \vspace{5em}
+
+    \begin{center}
+        {\large \textbf{2nd Fork}}
+
+        \begin{forest}
+            [Parent
+                [Child 2**]
+                [Child 1*
+                    [Child 3**]]
+            ]
+        \end{forest}
+    \end{center}
+    \vfill
+    \newpage
+
+    \begin{center}
+        {\large \textbf{3rd Fork}}
+
+        \begin{forest}
+            [Parent
+                [Child 4***]
+                [Child 2**
+                    [Child 5***]]
+                [Child 1*
+                    [Child 3**
+                        [Child 7***]]
+                    [Child 6***]]
+            ]
+        \end{forest}
+    \end{center}
+
+    \emph{In this diagram each * denotes the $n$th fork at which the child was instantiated, where $n$
+    represents the amount of asterisks trailing a child label.}
+
+    Effectively at the third fork there will be a total of \textbf{8} processes, since at each fork
+    in this structure the amount of processes double, we can express this as $2^n$ where $n$ is the
+    amount of times the program calls \texttt{fork()}.
+
+
     {\large \item Will the last line in the sample code below still be printed? How about when using \texttt{execl()}? Why or why not? Explain.}
 \end{enumerate}
 
