@@ -1,5 +1,56 @@
 \documentclass{article}
 
+\usepackage{minted}
+
 \begin{document}
-Hello world
+
+{\Large \textbf{Reference C++ Code A}}
+\begin{minted}{c}
+    if (fork() == 0) {
+        // do stuff
+    } else if (fork() == 0) {
+        // do more stuff..
+    } else if (fork() == 0) {
+        // do more "stuff"..
+    } else if (fork() == 0) {
+        // noooo
+    }
+\end{minted}
+
+{\Large \textbf{Reference C++ Code B}}
+\begin{minted}{c}
+    if (fork() == 0) {
+        if (fork() == 0) {
+            if (fork() == 0) {
+                // if ...
+                // aaaahhhh
+            }
+        }
+    }
+\end{minted}
+
+{\Large \textbf{Reference C++ Code C}}
+\begin{minted}{cpp}
+    int main(int argc, char* argv[]) {
+        // just use execv to run ANY program
+        if (execv("/usr/bin/gedit", argv) == -1) {
+            // error
+            cout << "Error. Booooo!" << endl;
+        }
+        cout << "Will this line still be printed?" << endl;
+    }
+\end{minted}
+
+These code snippets were obtained from the Lab 6 assignment page.
+
+\vfill
+\newpage
+
+\begin{enumerate}
+    {\large \item What should be the resulting process \emph{FAMILY TREES} from these two (Code A and Code B) code snippets? Illustrate.}
+    
+    In reference code A all \texttt{fork()} calls 
+    {\large \item Will the last line in the sample code below still be printed? How about when using \texttt{execl()}? Why or why not? Explain.}
+\end{enumerate}
+
 \end{document}
