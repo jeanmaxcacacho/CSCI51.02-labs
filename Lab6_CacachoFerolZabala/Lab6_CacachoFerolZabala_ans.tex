@@ -52,7 +52,7 @@ These code snippets were obtained from the Lab 6 assignment page.
 \begin{enumerate}
     {\large \item What should be the resulting process \emph{FAMILY TREES} from these two (Code A and Code B) code snippets? Illustrate.}
     
-    In reference code A all \texttt{fork()} calls performed at the same "hierarchy level" in the if-else tree. The entry point starts at \texttt{if (fork() == 0)},
+    In reference to code A, all \texttt{fork()} calls are performed at the same "hierarchy level" in the if-else tree. The entry point starts at \texttt{if (fork() == 0)},
     which produces the first child process. However, should this \texttt{fork()} fail, the succeeding \texttt{fork()} calls in the following \texttt{else if (fork() == 0)}
     statement produces a child process accordingly. Once a \texttt{fork()} successfully produces a child, the program enters the respective instruction block and stops forking.
     \textbf{The resulting process family tree from code A looks like:}
@@ -122,22 +122,27 @@ These code snippets were obtained from the Lab 6 assignment page.
 
     Effectively at the third fork there will be a total of \textbf{8} processes, since at each fork
     in this structure the amount of processes double, we can express this as $2^n$ where $n$ is the
-    amount of times the program calls \texttt{fork()}.
+    amount of times a \texttt{fork()} was successful.
+    \vfill
+    \newpage
 
 
     {\large \item Will the last line in the sample code below (Code C) still be printed? How about when using \texttt{execl()}? Why or why not? Explain.}
 
-    What Code C effectively does is to replace the current process with the gedit program from the user's \emph{programs} (/usr/bin/\ldots{} serves that
-    purpose) directory. Should the \texttt{exec()} call succeed then the current process is \emph{replaced} with the program located within the specified
-    path---if the call fails then the statement resolves to the value $-1$.
+    What Code C effectively does is to replace the current process with the \texttt{gedit} program from the user's \emph{programs} (/usr/bin/\ldots{} serves that
+    purpose in UNIX-based environments) directory. Should the \texttt{exec()} call succeed then the current process is \emph{replaced} with the program located
+    within the specified path---if the call fails then the statement resolves to $-1$.
+    \vspace{1em}
 
-    Assuming that gedit is properly installed within the machine, or that there is a program to be executed in whatever path is passed into \texttt{execv()},
-    then the program will never execute the instructions: \texttt{cout << "will this line still be printed?" << endl}, since the process containing those
-    instructions would have already been replaced with what was passed into \texttt{execv()}.
+    Assuming that \texttt{gedit} is properly installed within the machine, or that there is a program to be executed in whatever path is passed into
+    \texttt{execv()}, then the program will never execute the instructions: \texttt{cout << "will this line still be printed?" << endl}, since the
+    process containing those instructions would have already been replaced with what was passed into \texttt{execv()}.
+    \vspace{1em}
 
     On the otherhand if the path passed into \texttt{execv()} does not exist, the current process does not get replaced and instead continues executing instructions
     stored within the current \texttt{*.cpp} file. In this case there will be two outputs to the terminal \texttt{Error. Booooo!} and \texttt{Will this line still be
     printed?}---since the process was not replaced by the call.
+    \vspace{1em}
 
     The use of \texttt{execl()} will not make any major changes to the logic of whether or not the last line will be printed to the terminal or not, the only thing
     that changes is how the path is passed into the \texttt{exec()} function. Whereas in \texttt{execv()} we passed the file path with an array of arguments, \texttt{
