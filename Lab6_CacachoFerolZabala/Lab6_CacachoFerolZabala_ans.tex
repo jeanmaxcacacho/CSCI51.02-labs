@@ -125,7 +125,25 @@ These code snippets were obtained from the Lab 6 assignment page.
     amount of times the program calls \texttt{fork()}.
 
 
-    {\large \item Will the last line in the sample code below still be printed? How about when using \texttt{execl()}? Why or why not? Explain.}
+    {\large \item Will the last line in the sample code below (Code C) still be printed? How about when using \texttt{execl()}? Why or why not? Explain.}
+
+    What Code C effectively does is to replace the current process with the gedit program from the user's \emph{programs} (/usr/bin/\ldots{} serves that
+    purpose) directory. Should the \texttt{exec()} call succeed then the current process is \emph{replaced} with the program located within the specified
+    path---if the call fails then the statement resolves to the value $-1$.
+
+    Assuming that gedit is properly installed within the machine, or that there is a program to be executed in whatever path is passed into \texttt{execv()},
+    then the program will never execute the instructions: \texttt{cout << "will this line still be printed?" << endl}, since the process containing those
+    instructions would have already been replaced with what was passed into \texttt{execv()}.
+
+    On the otherhand if the path passed into \texttt{execv()} does not exist, the current process does not get replaced and instead continues executing instructions
+    stored within the current \texttt{*.cpp} file. In this case there will be two outputs to the terminal \texttt{Error. Booooo!} and \texttt{Will this line still be
+    printed?}---since the process was not replaced by the call.
+
+    The use of \texttt{execl()} will not make any major changes to the logic of whether or not the last line will be printed to the terminal or not, the only thing
+    that changes is how the path is passed into the \texttt{exec()} function. Whereas in \texttt{execv()} we passed the file path with an array of arguments, \texttt{
+    execl()} requires that the file path is passed followed by each argument as separate parameters. \textbf{The logic of whether or not the process gets replaced still is
+    the same assuming that \texttt{execl()} is used properly, the only way it differs is in syntax.}
+
 \end{enumerate}
 
 \end{document}
