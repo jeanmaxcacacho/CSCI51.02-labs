@@ -21,9 +21,11 @@ int main(int argc, char* argv[]) {
         while (true) {
             time_t now = time(nullptr);
             tm *t = localtime(&now);
+            // use C-style print-outs to have direct access to sentinel character substitution
             printf("[%04d-%02d-%02d] %02d:%02d:%02d\n",
                    t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
                    t->tm_hour, t->tm_min, t->tm_sec);
+            // the problem area is that this only prints out once, not every 3rd print out
             if (counter == 3) {
                 counter == 0;
                 printf("\"This program has gone on for far too long. Type Ctrl+C to abort this timer application.\"\n");
