@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
                    t->tm_hour, t->tm_min, t->tm_sec);
             // the problem area is that this only prints out once, not every 3rd print out
             if (counter == 3) {
-                counter == 0;
+                counter = 0;
                 printf("\"This program has gone on for far too long. Type Ctrl+C to abort this timer application.\"\n");
             }
             counter++;
