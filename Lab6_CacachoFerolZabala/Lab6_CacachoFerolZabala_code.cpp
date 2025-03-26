@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
         cout << "Fork failed!" << endl;
         return -1;
     } else if (proc_id == 0) {
-        if (execv("/usr/bin/xclock", argv) == -1) {
+        if (execv("/usr/bin/xclock", argv) == -1) { // if exec returns neg 1, process was not able to run and will end
             cout << "Program was not able to run! Terminate process!" << endl;
             return -1;
         }
@@ -25,7 +25,6 @@ int main(int argc, char* argv[]) {
             printf("[%04d-%02d-%02d] %02d:%02d:%02d\n",
                    t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
                    t->tm_hour, t->tm_min, t->tm_sec);
-            // the problem area is that this only prints out once, not every 3rd print out
             if (counter == 3) {
                 counter = 0;
                 printf("\"This program has gone on for far too long. Type Ctrl+C to abort this timer application.\"\n");
