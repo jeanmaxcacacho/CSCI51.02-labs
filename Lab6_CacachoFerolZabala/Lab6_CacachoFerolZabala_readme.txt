@@ -10,6 +10,6 @@ replace that process with the xclock program, if the program cannot be located i
 exec will return a negative value and terminate that process. Simultaneously, the parent process uses time
 objects defined in the ctime library to print out to the console the system clock every 10 seconds.
 
-An interesting thing of note is that once the fork has already been called both processes are independent
-of each other. In the case that the fork succeeds but the exec does not, the child process will terminate
-but the parent process still continues printing the time to the terminal.
+An interesting thing of note is that once the fork has been called, the parent process is independent of the child,
+the child however terminates when the parent does also. In the case that the fork succeeds but the exec does not,
+the child process will terminate but the parent process still continues printing the time to the terminal.
