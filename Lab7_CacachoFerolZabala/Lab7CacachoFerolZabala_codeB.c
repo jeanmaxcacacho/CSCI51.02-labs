@@ -99,8 +99,8 @@ int main(int argc, char* argv[]) {
         final_sum += toSum[i];
     }
 
-    printf("Computed sin(%.15Lf) = %.15Lf\n", X, final_sum);
-    printf("Actual sin(%.15Lf) = %.15Lf\n", X, sinl(X));
+    printf("Fake sin(%.15Lf) = %.15Lf\n", X, final_sum);
+    printf("Real sin(%.15Lf) = %.15Lf\n", X, sinl(X));
 
     free(threads);
     free(toSum);
