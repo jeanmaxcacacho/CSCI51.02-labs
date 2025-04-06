@@ -31,8 +31,8 @@ void* run(void* indexPtr) {
 
 int main(int argc, char* argv[]) {
   if (argc==1) {
-    printf("Error! No arguments detected in stdin!");
-    return -1;
+    printf("Error! No arguments detected in stdin!\n");
+    abort();
   }
 
   int argCount = argc - 1;
