@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-
 /*
   1. pass an int to the run() function of a thread
   2. dynamically create pthread_t array, size equal to argc - 1; exit if argc == 1
@@ -11,6 +7,10 @@
      if x is odd arr[x] negated
   5. print results: "arr[x] (old) has been replaced with arr[x] (new)"
 */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
 
 int* arr;
 
