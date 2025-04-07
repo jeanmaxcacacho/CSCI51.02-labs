@@ -57,6 +57,9 @@ void* compute_terms(void* arg) {
         long double denominator = factorial(2*k + 1);
         term = sign * numerator/denominator;
 
+        usleep(100000);
+        printf("Thread %d, k=%d, term=%.10Lf\n", thread_id, k, term);
+
         if (fabsl(term) < COMPUTE_LIMIT) {
             break;
         }
