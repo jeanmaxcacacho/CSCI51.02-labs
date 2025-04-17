@@ -57,5 +57,25 @@ int main(int argc, char* argv[]) {
 
     int semID = semget(SEM_KEY, 1, 0666);
 
+    char* buffer = (char*)malloc((size_t) shmSize+1);
+    int chunkIndex = 1;
+    while (/*read from shared memory*/ 1) {
+        sem_wait(semID);
+        memcpy(buffer, data, shmSize + 1);
+        buffer[shmSize] = '\0'; // just in case (safety)
+
+        if (strlen(buffer) == 0) {
+            sem_post(semID);
+            break;
+        }
+
+
+        printf("Chunk %d:\n %s\n", chunkIndex, buffer);
+
+        chunkIndex++;
+        sem_post(semID);
+        sleep(2);
+    }
+
     return 0;
 }
