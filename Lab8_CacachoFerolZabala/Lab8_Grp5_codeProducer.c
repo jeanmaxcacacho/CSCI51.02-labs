@@ -66,17 +66,19 @@ int main(int argc, char* argv[]) {
     // to the shared memory, ALWAYS that's what will happen
     // once the first chunk gets written, the producer will wait
 
-    char* buffer = (char*)malloc((size_t) shmSize); // we're transferring shmSize bytes at a time
+    char* buffer = (char*)malloc((size_t) shmSize+1); // we're transferring shmSize bytes at a time
     size_t bytesRead; // fread returns # of elements read
     int chunkIndex = 1;
     while ((bytesRead = fread(buffer, 1, shmSize, filePtr)) > 0) {
         sem_wait(semID); // this works since we init the semaphore set to 1
+        buffer[bytesRead] = '\0'; // null terminate each chunk
         printf("Chunk %d:\n", chunkIndex);
         fwrite(buffer, 1, bytesRead, stdout); // write to terminal as visual indicator
-        memcpy(data, buffer, bytesRead); // write to shared memory
         printf("\n");
+        memcpy(data, buffer, bytesRead + 1); // write to shared memory
         chunkIndex++;
         sem_post(semID);
+        sleep(2); // how many seconds I have to execute on the other terminal lmfao
     }
 
     return 0;
