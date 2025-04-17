@@ -52,29 +52,31 @@ int main(int argc, char* argv[]) {
     }
 
     // so once done with input validation init IPC constructs
-    // int shmID = shmget(SHM_KEY, (size_t) shmSize, IPC_CREAT | 0666);
-    // char* data = (char*)shmat(shmID, NULL, 0);
+    int shmID = shmget(SHM_KEY, (size_t) shmSize, IPC_CREAT | 0666);
+    char* data = (char*)shmat(shmID, NULL, 0);
 
-    // int semID = semget(SEM_KEY, 1, IPC_CREAT | 0666);
-    // semctl(semID, 0, SETVAL, 1);
+    int semID = semget(SEM_KEY, 1, IPC_CREAT | 0666);
+    semctl(semID, 0, SETVAL, 1);
 
     // data transfer is sequential, write until buffer is full
     // once buffer is full reader starts, while reading can't write
     // once reader is done start writing again until full buffer
     // each iteration of the loop will fill the buffer up/reach EOF
+    // the first thing that always happens is writing the first chunk
+    // to the shared memory, ALWAYS that's what will happen
+    // once the first chunk gets written, the producer will wait
 
     char* buffer = (char*)malloc((size_t) shmSize); // we're transferring shmSize bytes at a time
     size_t bytesRead; // fread returns # of elements read
-
-    // let's test incremental reading, let's print each read chunk to stdout
     int chunkIndex = 1;
     while ((bytesRead = fread(buffer, 1, shmSize, filePtr)) > 0) {
+        sem_wait(semID); // this works since we init the semaphore set to 1
         printf("Chunk %d:\n", chunkIndex);
-        fwrite(buffer, 1, bytesRead, stdout);
+        fwrite(buffer, 1, bytesRead, stdout); // write to terminal as visual indicator
+        memcpy(data, buffer, bytesRead); // write to shared memory
         printf("\n");
         chunkIndex++;
-
-        sleep(1);
+        sem_post(semID);
     }
 
     return 0;
