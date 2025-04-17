@@ -57,6 +57,8 @@ int main(int argc, char* argv[]) {
 
     int semID = semget(SEM_KEY, 1, 0666);
 
+    // TODO: implement writing to out.txt and proper loop termination
+
     char* buffer = (char*)malloc((size_t) shmSize+1);
     int chunkIndex = 1;
     while (/*read from shared memory*/ 1) {
