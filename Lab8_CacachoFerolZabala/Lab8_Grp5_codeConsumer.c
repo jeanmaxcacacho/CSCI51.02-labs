@@ -77,8 +77,8 @@ int main(int argc, char* argv[]) {
         //     break;
         // }
 
-        // fwrite(buffer, 1, strlen(buffer), filePtr);
         printf("Chunk %d:\n %s\n", chunkIndex, buffer);
+        fwrite(buffer, 1, strlen(buffer), filePtr);
 
         chunkIndex++;
 
