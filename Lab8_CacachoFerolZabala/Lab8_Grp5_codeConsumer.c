@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    FILE* filePtr = fopen(filePath, "r");
+    FILE* filePtr = fopen(filePath, "w");
     if (!filePtr) {
         perror("fopen");
         exit(1);
@@ -63,18 +63,26 @@ int main(int argc, char* argv[]) {
     int chunkIndex = 1;
     while (/*read from shared memory*/ 1) {
         sem_wait(semID);
-        memcpy(buffer, data, shmSize + 1);
-        buffer[shmSize] = '\0'; // just in case (safety)
 
-        if (strlen(buffer) == 0) {
+        if (data[0] == '\0') {
             sem_post(semID);
             break;
         }
 
+        memcpy(buffer, data, shmSize + 1);
+        // buffer[shmSize] = '\0'; // just in case (safety)
 
+        // if (strlen(buffer) == 0) {
+        //     sem_post(semID);
+        //     break;
+        // }
+
+        // fwrite(buffer, 1, strlen(buffer), filePtr);
         printf("Chunk %d:\n %s\n", chunkIndex, buffer);
 
         chunkIndex++;
+
+        memset(buffer, 0, shmSize + 1);
         sem_post(semID);
         sleep(2);
     }

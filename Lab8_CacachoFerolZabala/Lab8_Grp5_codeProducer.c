@@ -71,15 +71,17 @@ int main(int argc, char* argv[]) {
     int chunkIndex = 1;
     while ((bytesRead = fread(buffer, 1, shmSize, filePtr)) > 0) {
         sem_wait(semID); // this works since we init the semaphore set to 1
-        buffer[bytesRead] = '\0'; // null terminate each chunk
+        buffer[bytesRead] = '\0'; // null terminate each chunk | ok so it's actually being written now kekW
         printf("Chunk %d:\n", chunkIndex);
-        fwrite(buffer, 1, bytesRead, stdout); // write to terminal as visual indicator
+        fwrite(buffer, 1, bytesRead + 1, stdout); // write to terminal as visual indicator
         printf("\n");
         memcpy(data, buffer, bytesRead + 1); // write to shared memory
         chunkIndex++;
         sem_post(semID);
         sleep(2); // how many seconds I have to execute on the other terminal lmfao
     }
-
+    sem_wait(semID);
+    data[0] = '\0'; // signal done producing
+    sem_post(semID);
     return 0;
 }
