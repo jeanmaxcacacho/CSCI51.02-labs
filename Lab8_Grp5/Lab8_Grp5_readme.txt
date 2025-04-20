@@ -8,7 +8,7 @@ Both programs function by accessing an intermediate storage buffer that acts
 as the shared memory's "instance" in that program. The producer initializes the
 semaphore to 1, an "unlocked" state; the write loop starts with a wait followed
 by a post signal. This setup allows the producer to execute first, writing the
-first chunk of data into memory. After, control is passed to the consumer program
+first chunk of data into memory. After, access is granted to the consumer program
 which reads from the shared memory and writes to a specified output file.
 
 Data is transferred in chunk sizes specified by argv[2] passed in by the program user.
