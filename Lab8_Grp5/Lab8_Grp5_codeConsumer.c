@@ -53,39 +53,69 @@ int main(int argc, char* argv[]) {
 
     // consumer perms are only 0666, no semaphore init
     int shmID = shmget(SHM_KEY, (size_t) shmSize, 0666);
+    if (shmID == -1) {
+        perror("shmget");
+        fclose(filePtr);
+        exit(1);
+    }
+
     char* data = (char*)shmat(shmID, NULL, 0);
+    if (data == (char*)-1) {
+        perror("shmat");
+        shmctl(shmID, IPC_RMID, NULL);
+        fclose(filePtr);
+        exit(1);
+    }
 
     int semID = semget(SEM_KEY, 1, 0666);
-
-    // TODO: implement writing to out.txt and proper loop termination
+    if (semID == -1) {
+        perror("semget");
+        shmdt("data");
+        shmctl(shmID, IPC_RMID, NULL);
+        fclose(filePtr);
+        exit(1);
+    }
 
     char* buffer = (char*)malloc((size_t) shmSize+1);
+    if (buffer == NULL) {
+        perror("malloc");
+        shmdt(data);
+        shmctl(shmID, IPC_RMID, NULL);
+        semctl(semID, 0, IPC_RMID);
+        fclose(filePtr);
+        exit(1);
+    }
+
     int chunkIndex = 1;
     while (/*read from shared memory*/ 1) {
         sem_wait(semID);
 
+        // EOF signal from producer program
         if (data[0] == '\0') {
             sem_post(semID);
             break;
         }
 
         memcpy(buffer, data, shmSize + 1);
-        // buffer[shmSize] = '\0'; // just in case (safety)
-
-        // if (strlen(buffer) == 0) {
-        //     sem_post(semID);
-        //     break;
-        // }
 
         printf("Chunk %d:\n %s\n", chunkIndex, buffer);
         fwrite(buffer, 1, strlen(buffer), filePtr);
 
         chunkIndex++;
 
+        // clear current contents of buffer, exact content and length of
+        // data stream is INVISIBLE to the consumer
         memset(buffer, 0, shmSize + 1);
         sem_post(semID);
         sleep(2);
     }
+
+    free(buffer);
+    fclose(filePtr);
+    shmdt(data);
+
+    shmctl(shmID, IPC_RMID, NULL);
+    semctl(semID, 0, IPC_RMID);
 
     return 0;
 }

@@ -53,9 +53,30 @@ int main(int argc, char* argv[]) {
 
     // so once done with input validation init IPC constructs
     int shmID = shmget(SHM_KEY, (size_t) shmSize, IPC_CREAT | 0666);
+    if (shmID == -1) {
+        perror("shmget");
+        fclose(filePtr);
+        exit(1);
+    }
+
     char* data = (char*)shmat(shmID, NULL, 0);
+    if (data == (char*)-1) {
+        perror("shmat");
+        shmctl(shmID, IPC_RMID, NULL);
+        fclose(filePtr);
+        exit(1);
+    }
 
     int semID = semget(SEM_KEY, 1, IPC_CREAT | 0666);
+    if (semID == -1) {
+        perror("semget");
+        shmdt(data);
+        shmctl(shmID, IPC_RMID, NULL);
+        fclose(filePtr);
+        exit(1);
+    }
+
+    // init semaphore, starts unlocked
     semctl(semID, 0, SETVAL, 1);
 
     // data transfer is sequential, write until buffer is full
@@ -67,6 +88,15 @@ int main(int argc, char* argv[]) {
     // once the first chunk gets written, the producer will wait
 
     char* buffer = (char*)malloc((size_t) shmSize+1); // we're transferring shmSize bytes at a time
+    if (buffer == NULL) {
+        perror("malloc");
+        shmdt(data);
+        shmctl(shmID, IPC_RMID, NULL);
+        semctl(semID, 0, IPC_RMID);
+        fclose(filePtr);
+        exit(1);
+    }
+
     size_t bytesRead; // fread returns # of elements read
     int chunkIndex = 1;
     while ((bytesRead = fread(buffer, 1, shmSize, filePtr)) > 0) {
@@ -83,5 +113,13 @@ int main(int argc, char* argv[]) {
     sem_wait(semID);
     data[0] = '\0'; // signal done producing
     sem_post(semID);
+
+    free(buffer);
+    fclose(filePtr);
+    shmdt(data);
+
+    shmctl(shmID, IPC_RMID, NULL);
+    semctl(semID, 0, IPC_RMID);
+
     return 0;
 }
